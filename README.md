@@ -11,9 +11,10 @@
 
 ### Интерфейс
 
-Сразу после запуска нас встречает необычный интерфейс. Лично у меня начали разбегаться глаза :)   
+Сразу после запуска нас встречает необычный интерфейс.   
+Лично у меня начали разбегаться глаза :)   
 Через час, понимаешь, что все не так страшно.   
-Через два, начинаешь жонглировать разными настройками. В хорошем плане.   
+Через два, начинаешь жонглировать разными настройками.
 
 
 **Консоль**
@@ -25,7 +26,7 @@
 
 Из коробки, blender поступает с настроенным локальным окружением.   
 Чтобы приложение увидело библиотеку, достаточно переместить её в   
-следующую папку: /blender/2.93/python/lib/python3.9 (Linux).
+следующую папку: */blender/2.93/python/lib/python3.9 (Linux).*
 
 Во время разработки, удобно тестировать аддонн через blender-консоль.   
 Но стоит учесть, что blender автоматически не обновляет библиотеки    
@@ -34,49 +35,83 @@
 ![Обновляем аддонны](https://github.com/gleb-papchihin/git_crash/blob/master/reload.png)
 
 
-**Дальнейшее чтение**
-
-Есть ещё много всего интересного!
-
-
 ### Объекты
 
-Немного разобрались с интерфейсом. Самое время, изучить способности Blender API. 
+Вот мы и добрались до API. В этом блоке научимся обращаться к объектам,   
+получать и менять их свойства. Но перед этим представим, что у нас есть    
+проект, в котором следующая структура объектов:
 
+```
+scene:
+    pieces:
+        black:
+            black.pawn
+            black.king
+        white:
+            white.pawn
+            white.king
+```
 
-**Импортируем всё необходимое**
+**Импортируем необходимые библиотеки**
 
 ``` python
+# API
 from bpy_extras.object_utils import world_to_camera_view
+import bpy
+
+# Библиотек используемые в статье
 from dataclasses import dataclass
 from mathutils import Vector
 from operator import truediv
-import bpy
 ```
 
 **Получение объектов**
 
+К любому объекту на сцене можно получить доступ через **bpy.data**.   
+Посмотрим на наиболее применимые свойства:
+1. **bpy.data.objects** - Предоставляет доступ ко всем объектам на сцене.
+2. **bpy.data.collections** - Предоставляет доступ ко всем коллекциям.    
+Коллекции нужны, когда мы хотим объеденить несколько объектов со схожим   
+свойством. К примеру, black_pieces - коллекция, содержащая только чёрные шахматные фигуры.
+
 ``` python
-cube = bpy.data.objects['Cube']
-collection = bpy.data.collections['Collection']
-objects = collection.all_objects()
+white_king = bpy.data.objects['white_king']
+white_pieces = bpy.collections['white_pieces'].all_objects()
+all_pieces = bpy.collections['collection'].all_objects()
 ```
 
-**Удивительные свойства и как их менять**
+**Cвойства объекта**
+
+
+После того, как мы получили объект, мы можем начать работать с ним.   
+Почти все задачи можно решить с помощью следующих свойств:   
+1. location
+2. dimensions
+3. scale
+4. rotation_euler
+5. bound_box
+6. data   
+
+Посмотрим на свойства объекта более детально:
 
 ``` python
-cube.location
+white_king = bpy.data.objects['white_king']
+
+# location, dimensions, scale
+
+white_king.location
 # >>> Vector((0.0, 0.0, 0.0))
 
-cube.location.xy
+white_king.location.xy
 # >>> Vector((0.0, 0.0))
 
-cube.location.xy = (0, 0)
-cube.location[0:2] = (0, 0)
+# rotation_euler
+
+white_king.rotation_euler
+# >>> Euler((0.0, 0.0, 0.0), 'XYZ')
 ```
 
-Отдельное место занимает свойство bound_box
-
+Стоит отдельно рассмотреть bound_box:
 
 ``` python
 def bounding_box_local(object: bpy.types.Object) -> List[Vector]:
@@ -87,6 +122,25 @@ def bounding_box(object: bpy.types.Object) -> List[Vector]:
         object.matrix_world @ point 
         for point in bounding_box_local(object)
         ]
+```
+
+**Трансформации**
+
+Большая часть трансформаций происходит через изменение свойств объекта.   
+Другими словами, если хотим передвинуть объект, то нужно изменить свойство **location**.   
+
+``` python
+white_king = bpy.data.objects['white_king']
+
+white_king.location
+# >>> Vector((0.0, 0.0, 0.0))
+
+white_king.location.xy
+# >>> Vector((0.0, 0.0))
+
+white_king.location.xy = (0, 0)
+white_king.location[0:2] = (0, 0)
+
 ```
 
  **Если вы захотели создать новый объект**
