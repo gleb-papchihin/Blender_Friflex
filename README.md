@@ -178,3 +178,7 @@ def create_camera(name, collection):
     camera = bpy.data.cameras.new(name)
     return create(name, collection, camera)
 ```
+
+Вы можете задаться вопросом: зачем нужен аргумент collection? Всё довольно просто.   
+По умолчанию blender не добавляет объект на сцену. Нам нужно это сделать вручную
+привязать то, что мы создали, к какой-нибудь коллекции.
