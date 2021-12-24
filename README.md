@@ -91,7 +91,7 @@ all_pieces = bpy.collections['collection'].all_objects()
 4. rotation_euler
 5. bound_box
 
-В основном, свойства выражаются через mathutils.Vector или mathutils.Euler (только для rotation_euler).
+В основном, свойства выражаются через mathutils.Vector или mathutils.Euler (только для rotation_euler).   
 Посмотрим на это более детально:
 
 ``` python
