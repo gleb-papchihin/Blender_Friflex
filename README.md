@@ -91,7 +91,7 @@ def bounding_box(object: bpy.types.Object) -> List[Vector]:
 
  **Если вы захотели создать новый объект**
  
- ```
+ ``` python
  def create(name, collection, object_data = None):
     object = bpy.data.objects.new(name, object_data) 
     collection.objects.link(object)
