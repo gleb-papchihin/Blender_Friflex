@@ -90,28 +90,33 @@ all_pieces = bpy.collections['collection'].all_objects()
 3. scale
 4. rotation_euler
 5. bound_box
-6. data   
 
-Посмотрим на свойства объекта более детально:
+В основном, свойства выражаются через mathutils.Vector или mathutils.Euler (только для rotation_euler).
+Посмотрим на это более детально:
 
 ``` python
 white_king = bpy.data.objects['white_king']
-
-# location, dimensions, scale
-
 white_king.location
 # >>> Vector((0.0, 0.0, 0.0))
 
-white_king.location.xy
-# >>> Vector((0.0, 0.0))
+white_king.dimensions
+# >>> Vector((1.0, 1.0, 2.0))
 
-# rotation_euler
+white_king.scale
+# >>> Vector((1.0, 1.0, 1.0))
 
 white_king.rotation_euler
 # >>> Euler((0.0, 0.0, 0.0), 'XYZ')
 ```
 
-Стоит отдельно рассмотреть bound_box:
+Но отдельно от них стоит bound_box, представляющий из себя List[bpy_prop_array]:
+
+``` python
+type(white_king.bound_box[0])
+# >>> <class 'bpy_prop_array'>
+```
+
+Вот утилиты, помогающие выразить bound_box через mathutils.Vector:
 
 ``` python
 def bounding_box_local(object: bpy.types.Object) -> List[Vector]:
