@@ -140,8 +140,9 @@ def bounding_box(object: bpy.types.Object) -> List[Vector]:
 
 **Трансформации**
 
-Большая часть трансформаций происходит через изменение свойств объекта.   
-Другими словами, если хотим передвинуть объект, то нужно изменить свойство **location**.   
+Свойства используются не только для получении информации об объектк, но и для   
+применения трансформаций. Другими словами, если хотим передвинуть объект,    
+то нужно изменить свойство **location**.
 
 ``` python
 white_king = bpy.data.objects['white_king']
@@ -149,12 +150,13 @@ white_king = bpy.data.objects['white_king']
 white_king.location
 # >>> Vector((0.0, 0.0, 0.0))
 
-white_king.location.xy
-# >>> Vector((0.0, 0.0))
+white_king.location.xy = (1, 1)
+white_king.location
+# >>> Vector((1.0, 1.0, 0.0))
 
-white_king.location.xy = (0, 0)
-white_king.location[0:2] = (0, 0)
-
+white_king.location[:2] = (2, 2)
+white_king.location
+# >>> Vector((2..0, 2.0, 0.0))
 ```
 
  **Если вы захотели создать новый объект**
