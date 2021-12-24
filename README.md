@@ -116,13 +116,22 @@ type(white_king.bound_box[0])
 # >>> <class 'bpy_prop_array'>
 ```
 
-Вот утилиты, помогающие выразить bound_box через mathutils.Vector:
+Эти функции помогут выразить bound_box через mathutils.Vector.   
+Но стит сделать ещё одно замечание: по умолчанию координаты точек bound_box   
+расчитываются относительно центра объекта.
 
 ``` python
+
 def bounding_box_local(object: bpy.types.Object) -> List[Vector]:
+    ''' Desc:
+            координаты точек относительно центра объекта.
+    '''
     return list(map(Vector, object.bound_box))
 
 def bounding_box(object: bpy.types.Object) -> List[Vector]:
+    ''' Desc:
+            координаты точек относительно центра сцены.
+    '''
     return [
         object.matrix_world @ point 
         for point in bounding_box_local(object)
