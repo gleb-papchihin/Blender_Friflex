@@ -18,7 +18,7 @@
 
 **Консоль**
 
-![Открываем консоль](https://github.com/gleb-papchihin/git_crash/blob/master/open.gif)
+![Открываем консоль](https://github.com/gleb-papchihin/git_crash/blob/master/console.webm)
 
 
 **Аддоны (a.k.a. Библиотеки)**
