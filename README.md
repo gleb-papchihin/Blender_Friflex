@@ -140,7 +140,7 @@ def bounding_box(object: bpy.types.Object) -> List[Vector]:
 
 **Трансформации**
 
-Свойства используются не только для получении информации об объектк, но и для   
+Свойства используются не только для получении информации об объектах, но и для   
 применения трансформаций. Другими словами, если хотим передвинуть объект,    
 то нужно изменить свойство **location**.
 
@@ -159,10 +159,17 @@ white_king.location
 # >>> Vector((2.0, 2.0, 0.0))
 ```
 
- **Создание объекта**
+**Создание объекта**
  
- ``` python
- def create(name, collection, object_data = None):
+Последняя вещь, которая может пригодиться при генерации данных - создание объектов.   
+Прежде чем перейти к коду, несколько слов о сущности объекта. Объект - это обёртка,   
+предостваляющая доступ к тем свойствам, которые мы обсудили ранее. Встаёт вопрос:   
+Если объект - это обёртка, то вокруг чего её можно обернуть? В blender есть более
+специализированные классы: Camera, Light, Mesh и т.д. Чтобы получить доступ       
+содержимому достаточно использовать свойство **data**.
+ 
+``` python
+def create(name, collection, object_data = None):
     object = bpy.data.objects.new(name, object_data) 
     collection.objects.link(object)
     return object
@@ -170,4 +177,4 @@ white_king.location
 def create_camera(name, collection):
     camera = bpy.data.cameras.new(name)
     return create(name, collection, camera)
- ```
+```
