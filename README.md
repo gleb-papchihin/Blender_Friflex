@@ -156,10 +156,10 @@ white_king.location
 
 white_king.location[:2] = (2, 2)
 white_king.location
-# >>> Vector((2..0, 2.0, 0.0))
+# >>> Vector((2.0, 2.0, 0.0))
 ```
 
- **Если вы захотели создать новый объект**
+ **Создание объекта**
  
  ``` python
  def create(name, collection, object_data = None):
