@@ -26,7 +26,7 @@ objs = bpy.data.collections['Collection'].all_objects
 Сейчас в переменной objs находятся три объекта: Camera, Cube, Light. Эти объекты являются экземплярами класса bpy.types.Object и имеют общий набор свойств, который позволяет применять разные трансформации.
 
 
-1. location
+### location
 
 По умолчанию это свойство отвечает за смещение относительно центра сцены. Чтобы переместить объект, нам нужно изменить свойство. Например, переместим «Cube» куб на координату (1.0, 0.0, 2.0):
 
@@ -70,7 +70,7 @@ Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
 ```
 
 
-2. dimensions
+### dimensions
 
 Это свойство позволяет растягивать и сжимать объект вдоль осей. Процесс изменения аналогичен location:
 
@@ -123,7 +123,7 @@ def apply_simple_animation(cube, period):
 Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
 ```
 
-3. scale
+### scale
 
 Масштабировать объект можно не только с помощью свойства dimensions, но и scale. Заметим, что изменение одного из этих свойств приведет к изменению другого.
 
@@ -154,7 +154,7 @@ def apply_simple_animation(cube, period):
 Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
 ```
 
-4. rotation_euler
+### rotation_euler
 
 Для вращения объекта используется свойство rotation_euler. Оно немного отличается от location, dimensions и scale:
 
@@ -207,7 +207,7 @@ def apply_simple_animation(cube, period):
 Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
 ```
 
-5. bound_box
+### bound_box
 
 Это свойство доступно только для чтения. Оно возвращает 8 точек, описывающих границы объекта. В отличии от location, dimensions и scale, bound_box не использует mathutils.Vector:
 
