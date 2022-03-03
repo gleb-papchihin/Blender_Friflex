@@ -1,185 +1,236 @@
-### Not TLDR
 
-> *« План, что и говорить, был превосходный: простой и ясный, лучше не придумать.    
-> Недостаток у него был только один: было совершенно неизвестно, как привести его в исполнение »   
-> — Льюис Кэрролл. Приключения Алисы в Стране чудес.*
-
-Вы слышали про генерацию данных? Вероятно, да. Вероятно, вам, как и нам понравилаь эта идея...   
-Но как хорошо подметил Льюис Кэрролл, вопросы начинают появляться, когда приходит пора исполнять задуманное.   
-Поэтому вместо новогоднего обсуждения плюсов и минусов, попробуем пролить свет на генерацию данных c помощью [Blender](https://www.blender.org/).
+Не так давно, мы - IdChess собрали генератор синтетических данных на blender. Во время разработки, заметили, что информации по работе с blender api с точки зрения генерации данных практически нет. Поэтому решили, написать несколько статей, которые объединят полученный опыт и, надеемся, помогут тем, кто решил создать свой собственный синтетический датасет.
 
 
-### Интерфейс
+# Настройка интерфейса
 
-Сразу после запуска нас встречает необычный интерфейс.   
-Лично у меня начали разбегаться глаза :)   
-Через час, понимаешь, что все не так страшно.   
-Через два, начинаешь жонглировать разными настройками.
+Первым делом настроим интерфейс: закроем лишние вкладки и откроем «python console».
 
-
-**Консоль**
-
-![Открываем консоль](https://github.com/gleb-papchihin/git_crash/blob/master/open.gif)
+*Гифка*
 
 
-**Аддоны (a.k.a. Библиотеки)**
+# Объекты
 
-Из коробки, blender поступает с настроенным локальным окружением.   
-Чтобы приложение увидело библиотеку, достаточно переместить её в   
-следующую папку: */blender/2.93/python/lib/python3.9 (Linux).*
-
-Во время разработки, удобно тестировать аддонн через blender-консоль.   
-Но стоит учесть, что blender автоматически не обновляет библиотеки    
-после их изменения. Ничего страшного. Мы сделаем это вручную!   
-
-![Обновляем аддонны](https://github.com/gleb-papchihin/git_crash/blob/master/reload.png)
-
-
-### Объекты
-
-Вот мы и добрались до API. В этом блоке научимся обращаться к объектам,   
-получать и менять их свойства. Но перед этим представим, что у нас есть    
-проект, в котором следующая структура объектов:
-
-```
-scene:
-    pieces:
-        black:
-            black.pawn
-            black.king
-        white:
-            white.pawn
-            white.king
-```
-
-**Импортируем необходимые библиотеки**
+Доступ ко всем элементам проекта происходит, через модуль bpy.data. Например, получим доступ к объекту «Cube»:
 
 ``` python
-# API
-from bpy_extras.object_utils import world_to_camera_view
-import bpy
-
-# Библиотек используемые в статье
-from dataclasses import dataclass
-from mathutils import Vector
-from operator import truediv
+cube = bpy.data.objects['Cube']
 ```
 
-**Получение объектов**
-
-К любому объекту на сцене можно получить доступ через **bpy.data**.   
-Посмотрим на наиболее применимые свойства:
-1. **bpy.data.objects** - Предоставляет доступ ко всем объектам на сцене.
-2. **bpy.data.collections** - Предоставляет доступ ко всем коллекциям.    
-Коллекции нужны, когда мы хотим объеденить несколько объектов со схожим   
-свойством. К примеру, black_pieces - коллекция, содержащая только чёрные шахматные фигуры.
+bpy.data.objects ведёт себя, как словарь: доступны методы values, keys, items, get и т.д. Хорошо, а что, если мы хотим получить объекты содержащиеся в какой-нибудь коллекции? Просто используем другой атрибут модуля bpy.data:
 
 ``` python
-white_king = bpy.data.objects['white_king']
-white_pieces = bpy.collections['white_pieces'].all_objects()
-all_pieces = bpy.collections['collection'].all_objects()
+objs = bpy.data.collections['Collection'].all_objects
 ```
 
-**Cвойства объекта**
+Сейчас в переменной objs находятся три объекта: Camera, Cube, Light. Эти объекты являются экземплярами класса bpy.types.Object и имеют общий набор свойств, который позволяет применять разные трансформации.
 
 
-После того, как мы получили объект, мы можем начать работать с ним.   
-Почти все задачи можно решить с помощью следующих свойств:   
 1. location
+
+По умолчанию это свойство отвечает за смещение относительно центра сцены. Чтобы переместить объект, нам нужно изменить свойство. Например, переместим «Cube» куб на координату (1.0, 0.0, 2.0):
+
+``` python
+print(cube.location)
+# <Vector (0.0000, 0.0000, 0.0000)>
+
+cube.location = (1, 0, 2)
+
+# Эквивалентно
+
+cube.location.xz = (1, 2)
+
+# Эквивалентно
+
+cube.location.x = 1
+cube.location.z = 2
+
+# Эквивалентно
+
+cube.location[0] = 1
+cube.location[2] = 2
+
+print(cube.location)
+# <Vector (1.0000, 0.0000, 2.0000)>
+```
+
+*Гифка*
+
+``` python
+from threading import Thread
+import time
+import math
+
+def apply_simple_animation(cube, period):
+    for deg in range(361):
+        cube.location.x = 5 * math.sin(math.radians(deg))
+        time.sleep(period)
+
+Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
+```
+
+
 2. dimensions
+
+Это свойство позволяет растягивать и сжимать объект вдоль осей. Процесс изменения аналогичен location:
+
+``` python
+print(cube.dimensions)
+# <Vector (2.0000, 2.0000, 2.0000)>
+
+cube.dimensions = (4, 2, 2)
+
+# Эквивалентно
+
+cube.dimensions.x = 4
+
+# Эквивалентно
+
+cube.dimensions[0] = 4
+
+print(cube.dimensions)
+# <Vector (4.0000, 2.0000, 2.0000)>
+```
+
+Однако, заметим, что для некоторых объектов dimension работать не будет.
+
+``` python
+camera = bpy.data.objects['Camera']
+
+print(camera.dimensions)
+# <Vector (0.0000, 0.0000, 0.0000)>
+
+camera.dimensions.x = 2
+
+print(camera.dimensions)
+# <Vector (0.0000, 0.0000, 0.0000)>
+```
+
+Из этого следует, что dimensions будет работать только для объектов, имеющих форму.
+
+*Гифка*
+
+``` python
+from threading import Thread
+import time
+import math
+
+def apply_simple_animation(cube, period):
+    for deg in range(361):
+        cube.dimensions.x = 2 + math.sin(math.radians(deg))
+        time.sleep(period)
+
+Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
+```
+
 3. scale
+
+Масштабировать объект можно не только с помощью свойства dimensions, но и scale. Заметим, что изменение одного из этих свойств приведет к изменению другого.
+
+``` python
+print(cube.scale)
+# <Vector (1.0000, 1.0000, 1.0000)>
+
+cube.scale *= Vector((2, 1, 1))
+
+# Эквиалентно
+
+cube.scale.x *= 2
+```
+
+*Гифка*
+
+``` python
+from threading import Thread
+import time
+import math
+
+def apply_simple_animation(cube, period):
+    scale = cube.scale.copy()
+    for deg in range(361):
+        cube.scale = scale * (1 + math.sin(math.radians(deg)))
+        time.sleep(period)
+
+Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
+```
+
 4. rotation_euler
+
+Для вращения объекта используется свойство rotation_euler. Оно немного отличается от location, dimensions и scale:
+
+``` python
+print(cube.rotation_euler)
+# <Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>
+
+cube.rotation_euler = (
+    math.radians(60),
+    math.radians(45),
+    math.radians(30)
+    )
+
+# Эквивалентно
+
+cube.rotation_euler.x = math.radians(60)
+cube.rotation_euler.y = math.radians(45)
+cube.rotation_euler.z = math.radians(30)
+
+print(cube.rotation_euler)
+# <Euler (x=1.0472, y=0.7854, z=0.5236), order='XYZ'>
+```
+
+Предыдущий подход перезаписывает значение углов. Но если мы хотим вращать объект, относительно текущего поворота, то для этого можно использовать следующий метод:
+
+``` python
+rotation = Euler((
+    math.radians(60),
+    math.radians(45),
+    math.radians(30)
+    ))
+cube.rotation_euler.rotate(rotation)
+```
+
+При вращении объекта с помощью углов Эйлера, нужно помнить об одном из их недостатков - gimble lock. Про это можно прочитать [тут](https://habr.com/ru/post/183116/)
+
+*Гифка*
+
+``` python
+from threading import Thread
+import time
+import math
+
+def apply_simple_animation(cube, period):
+    for deg in range(361):
+        cube.rotation_euler.x = 2 * math.sin(math.radians(deg))
+        cube.rotation_euler.z = 4 * math.sin(math.radians(deg))
+        time.sleep(period)
+
+Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
+```
+
 5. bound_box
 
-В основном, свойства выражаются через mathutils.Vector или mathutils.Euler (только для rotation_euler).   
-Посмотрим на это более детально:
+Это свойство доступно только для чтения. Оно возвращает 8 точек, описывающих границы объекта. В отличии от location, dimensions и scale, bound_box не использует mathutils.Vector:
 
 ``` python
-white_king = bpy.data.objects['white_king']
-white_king.location
-# >>> Vector((0.0, 0.0, 0.0))
+print(type(cube.bound_box))
+# <class 'bpy_prop_array'>
 
-white_king.dimensions
-# >>> Vector((1.0, 1.0, 2.0))
-
-white_king.scale
-# >>> Vector((1.0, 1.0, 1.0))
-
-white_king.rotation_euler
-# >>> Euler((0.0, 0.0, 0.0), 'XYZ')
+print(type(cube.bound_box[0]))
+# <class 'bpy_prop_array'>
 ```
 
-Но отдельно от них стоит bound_box, представляющий из себя List[bpy_prop_array]:
+Для удобства преобразуем точки в mathutils.Vector:
 
 ``` python
-type(white_king.bound_box[0])
-# >>> <class 'bpy_prop_array'>
+def bounding_box(obj):
+    return [Vector(point) for point in obj.bound_box]
 ```
 
-Эти функции помогут выразить bound_box через mathutils.Vector.   
-Но стит сделать ещё одно замечание: по умолчанию координаты    
-точек bound_box расчитываются относительно центра объекта.
+У этого свойства есть ещё одна небольшая особенность: по умолчания координаты граничных точек расчитываются относительно центра объекта, а не сцены. Чтобы этого избежать, можно использовать следующую функцию:
 
 ``` python
-
-def bounding_box_local(object: bpy.types.Object) -> List[Vector]:
-    ''' Desc:
-            координаты точек относительно центра объекта.
-    '''
-    return list(map(Vector, object.bound_box))
-
-def bounding_box(object: bpy.types.Object) -> List[Vector]:
-    ''' Desc:
-            координаты точек относительно центра сцены.
-    '''
-    return [
-        object.matrix_world @ point 
-        for point in bounding_box_local(object)
-        ]
+def bounding_box_world(obj):
+    return [obj.matrix_world @ point for point in bounding_box(obj)]
 ```
 
-**Трансформации**
-
-Свойства используются не только для получении информации об объектах, но и для   
-применения трансформаций. Другими словами, если хотим передвинуть объект,    
-то нужно изменить свойство **location**.
-
-``` python
-white_king = bpy.data.objects['white_king']
-
-white_king.location
-# >>> Vector((0.0, 0.0, 0.0))
-
-white_king.location.xy = (1, 1)
-white_king.location
-# >>> Vector((1.0, 1.0, 0.0))
-
-white_king.location[:2] = (2, 2)
-white_king.location
-# >>> Vector((2.0, 2.0, 0.0))
-```
-
-**Создание объекта**
- 
-Последняя вещь, которая может пригодиться при генерации данных - создание объектов.   
-Прежде чем перейти к коду, несколько слов о сущности объекта. Объект - это обёртка,   
-предостваляющая доступ к тем свойствам, которые мы обсудили ранее. Встаёт вопрос:   
-Если объект - это обёртка, то вокруг чего её можно обернуть? Ответом будут   
-специализированные классы: Camera, Light, Mesh и т.д. Чтобы получить к ним   
-доступ достаточно использовать свойство объекта **data**.   
- 
-``` python
-def create(name, collection, object_data = None):
-    object = bpy.data.objects.new(name, object_data) 
-    collection.objects.link(object)
-    return object
-
-def create_camera(name, collection):
-    camera = bpy.data.cameras.new(name)
-    return create(name, collection, camera)
-```
-
-Вы можете задаться вопросом: зачем нужен аргумент collection? Всё довольно просто.   
-По умолчанию blender не добавляет объект на сцену. Нам нужно вручную привязать то,    
-что мы создали, к какой-нибудь коллекции. Проще говоря, вы не увидите свой объект,
-пока не добавите его в коллекцию.
+*Гифка: Включаем подсветку bound_box*
