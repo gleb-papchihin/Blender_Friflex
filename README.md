@@ -138,7 +138,7 @@ cube.scale *= Vector((2, 1, 1))
 cube.scale.x *= 2
 ```
 
-*Гифка*
+*![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/scale.gif)
 
 ``` python
 from threading import Thread
