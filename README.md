@@ -54,7 +54,7 @@ print(cube.location)
 # <Vector (1.0000, 0.0000, 2.0000)>
 ```
 
-*Гифка*
+![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/location.gif)
 
 ``` python
 from threading import Thread
@@ -108,7 +108,7 @@ print(camera.dimensions)
 
 Из этого следует, что dimensions будет работать только для объектов, имеющих форму.
 
-*Гифка*
+![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/dimensions.gif)
 
 ``` python
 from threading import Thread
