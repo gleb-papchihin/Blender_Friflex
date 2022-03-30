@@ -203,4 +203,4 @@ def bounding_box_world(obj):
     return [obj.matrix_world @ point for point in bounding_box(obj)]
 ```
 
-![bbox](https://github.com/gleb-papchihin/git_crash/blob/master/bbox.gif)
+![bbox](https://github.com/gleb-papchihin/git_crash/blob/master/bbox.png)
