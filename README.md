@@ -25,4 +25,4 @@
   
 Список объектов и коллекций, с которыми мы можем работать, представлен в этом блоке:
   
-![блок с объектами и коллекциями](https://github.com/gleb-papchihin/git_crash/blob/master/objects.gif)
+![блок с объектами и коллекциями](https://github.com/gleb-papchihin/git_crash/blob/master/objects.png)
