@@ -175,3 +175,6 @@ rotation = Euler((
     ))
 cube.rotation_euler.rotate(rotation)
 ```
+
+При вращении объекта с помощью углов Эйлера, нужно помнить об одной из их особенностей — gimble lock. Про это можно прочитать [тут](https://habr.com/ru/post/183116/)
+
