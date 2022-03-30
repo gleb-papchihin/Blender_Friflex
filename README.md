@@ -97,3 +97,41 @@ Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
 ```
 
 ![location](https://github.com/gleb-papchihin/git_crash/blob/master/location.gif)
+
+### dimensions
+
+Это свойство позволяет растягивать и сжимать объект вдоль осей. Dimensions возвращает значения в единицах измерения (по умолчанию это метры).
+
+``` python
+print(cube.dimensions)
+# <Vector (2.0000, 2.0000, 2.0000)>
+
+cube.dimensions = (4, 2, 2)
+
+# Эквивалентно
+
+cube.dimensions.x = 4
+
+# Эквивалентно
+
+cube.dimensions[0] = 4
+
+print(cube.dimensions)
+# <Vector (4.0000, 2.0000, 2.0000)>
+```
+
+Однако заметим, что для некоторых объектов dimension работать не будет. Об этом мы поговорим далее, а пока посмотрим на простой пример.
+
+``` python
+camera = bpy.data.objects['Camera']
+
+print(camera.dimensions)
+# <Vector (0.0000, 0.0000, 0.0000)>
+
+camera.dimensions.x = 2
+
+print(camera.dimensions)
+# <Vector (0.0000, 0.0000, 0.0000)>
+```
+
+![location](https://github.com/gleb-papchihin/git_crash/blob/master/dimensions.gif)
