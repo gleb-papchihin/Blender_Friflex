@@ -120,3 +120,21 @@ print(camera.dimensions)
 ```
 
 ![location](https://github.com/gleb-papchihin/git_crash/blob/master/dimensions.gif)
+
+
+### scale
+
+Масштабировать объект можно не только с помощью свойства dimensions, но и scale. В отличии от dimensions, scale не использует единицы измерения, а меняет масштаб в относительно исходного размера.
+
+``` python
+print(cube.scale)
+# <Vector (1.0000, 1.0000, 1.0000)>
+
+cube.scale *= Vector((2, 1, 1))
+
+# Эквиалентно
+
+cube.scale.x *= 2
+```
+
+![location](https://github.com/gleb-papchihin/git_crash/blob/master/scale.gif)
