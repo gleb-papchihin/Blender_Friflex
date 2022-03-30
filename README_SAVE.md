@@ -6,7 +6,7 @@
 
 Первым делом настроим интерфейс: закроем лишние вкладки и откроем «python console».
 
-![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/interface.gif)
+![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/console.gif)
 
 
 # Объекты
