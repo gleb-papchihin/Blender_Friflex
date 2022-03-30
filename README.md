@@ -81,21 +81,6 @@ print(cube.location)
 # <Vector (1.0000, 0.0000, 2.0000)>
 ```
 
-Для болшей наглядности, рассмотрим более сложный пример.
-
-``` python
-from threading import Thread
-import time
-import math
-
-def apply_simple_animation(cube, period):
-    for deg in range(361):
-        cube.location.x = 5 * math.sin(math.radians(deg))
-        time.sleep(period)
-
-Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
-```
-
 ![location](https://github.com/gleb-papchihin/git_crash/blob/master/location.gif)
 
 ### dimensions
