@@ -14,7 +14,7 @@
 
 Чтобы начать работу с API блендера, откроем python-консоль внутри приложения. Через нее мы будем запускать наши скрипты и наблюдать изменения на сцене.
 
-![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/interface.gif)
+![интерфейс](https://github.com/gleb-papchihin/git_crash/blob/master/console.gif)
 
 Помимо консоли, в blender есть текстовый редактор, который позволяет запускать код прямо в приложении. Более подробно про редактор можно посмотреть [тут](https://youtu.be/yg5CWcj-BM4?list=PLOVSu7-KesPgPiatDTP7jvdgxxwp18LyH&t=129). 
 
