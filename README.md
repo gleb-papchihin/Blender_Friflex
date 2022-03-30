@@ -167,12 +167,7 @@ print(cube.rotation_euler)
 Предыдущий подход перезаписывает углы. Но если мы хотим повернуть объект относительно текущего положения, то для этого можно использовать следующий метод.
 
 ``` python
-# Используется mathutils.Euler, встроенный в blender
-rotation = Euler((
-    math.radians(60),
-    math.radians(45),
-    math.radians(30)
-    ))
+rotation = Euler((0, 0, math.radians(10))) # Используется mathutils.Euler, встроенный в blender
 cube.rotation_euler.rotate(rotation)
 ```
 
