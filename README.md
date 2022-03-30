@@ -138,3 +138,40 @@ cube.scale.x = 2
 ```
 
 ![location](https://github.com/gleb-papchihin/git_crash/blob/master/scale.gif)
+
+
+### rotation_euler
+
+Для вращения объекта используется свойство rotation_euler. Оно немного отличается от location, dimensions и scale.
+
+``` python
+print(cube.rotation_euler)
+# <Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>
+
+cube.rotation_euler = (
+    math.radians(60),
+    math.radians(45),
+    math.radians(30)
+    )
+
+# Эквивалентно
+
+cube.rotation_euler.x = math.radians(60)
+cube.rotation_euler.y = math.radians(45)
+cube.rotation_euler.z = math.radians(30)
+
+print(cube.rotation_euler)
+# <Euler (x=1.0472, y=0.7854, z=0.5236), order='XYZ'>
+```
+
+Предыдущий подход перезаписывает углы. Но если мы хотим повернуть объект относительно текущего положения, то для этого можно использовать следующий метод.
+
+``` python
+# Используется mathutils.Euler, встроенный в blender
+rotation = Euler((
+    math.radians(60),
+    math.radians(45),
+    math.radians(30)
+    ))
+cube.rotation_euler.rotate(rotation)
+```
