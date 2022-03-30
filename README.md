@@ -177,3 +177,30 @@ cube.rotation_euler.rotate(rotation)
 
 ![rotation](https://github.com/gleb-papchihin/git_crash/blob/master/rotation.gif)
 
+### bound_box
+
+Это свойство доступно только для чтения. Оно возвращает 8 точек, описывающих границы объекта. В отличии от location, dimensions и scale, bound_box не использует mathutils.Vector.
+
+``` python
+print(type(cube.bound_box))
+# <class 'bpy_prop_array'>
+
+print(type(cube.bound_box[0]))
+# <class 'bpy_prop_array'>
+```
+
+Для удобства преобразуем точки в mathutils.Vector.
+
+``` python
+def bounding_box(obj):
+    return [Vector(point) for point in obj.bound_box]
+```
+
+У этого свойства есть еще одна небольшая особенность: по умолчанию координаты граничных точек рассчитываются относительно центра объекта, а не сцены. Чтобы перевести координаты точек в систему сцены, можно использовать следующую функцию.
+
+``` python
+def bounding_box_world(obj):
+    return [obj.matrix_world @ point for point in bounding_box(obj)]
+```
+
+![bbox](https://github.com/gleb-papchihin/git_crash/blob/master/bbox.gif)
