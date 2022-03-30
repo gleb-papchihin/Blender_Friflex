@@ -145,6 +145,8 @@ cube.scale.x = 2
 Для вращения объекта используется свойство rotation_euler. Оно немного отличается от location, dimensions и scale.
 
 ``` python
+import math
+
 print(cube.rotation_euler)
 # <Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>
 
