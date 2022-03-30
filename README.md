@@ -52,3 +52,48 @@ bpy.data.collections['Collection'].all_objects.values()
 Объекты получены. Теперь пройдемся по их свойствам.
 
 **Важно:** свойства, которые мы рассмотрим далее, являются дескрипторами. А что это значит для нас? Например, нам не нужно искать метод «move», чтобы переместить объект — достаточно изменить location — свойство отвечающее за положение.
+
+### location
+
+По умолчанию это свойство отвечает за смещение относительно центра сцены. Попробуем переместить объект «Cube».
+
+``` python
+print(cube.location)
+# <Vector (0.0000, 0.0000, 0.0000)>
+
+cube.location = (1, 0, 2)
+
+# Эквивалентно
+
+cube.location.xz = (1, 2)
+
+# Эквивалентно
+
+cube.location.x = 1
+cube.location.z = 2
+
+# Эквивалентно
+
+cube.location[0] = 1
+cube.location[2] = 2
+
+print(cube.location)
+# <Vector (1.0000, 0.0000, 2.0000)>
+```
+
+Для болшей наглядности, рассмотрим более сложный пример.
+
+``` python
+from threading import Thread
+import time
+import math
+
+def apply_simple_animation(cube, period):
+    for deg in range(361):
+        cube.location.x = 5 * math.sin(math.radians(deg))
+        time.sleep(period)
+
+Thread(target = apply_simple_animation, args = (cube, 0.01)).start()
+```
+
+![location](https://github.com/gleb-papchihin/git_crash/blob/master/location.gif)
