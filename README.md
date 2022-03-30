@@ -130,11 +130,11 @@ print(camera.dimensions)
 print(cube.scale)
 # <Vector (1.0000, 1.0000, 1.0000)>
 
-cube.scale *= Vector((2, 1, 1))
+cube.scale = Vector((2, 1, 1)) # Используется mathutils.Vector, встроенный в blender
 
 # Эквиалентно
 
-cube.scale.x *= 2
+cube.scale.x = 2
 ```
 
 ![location](https://github.com/gleb-papchihin/git_crash/blob/master/scale.gif)
