@@ -227,6 +227,8 @@ cube.hide_render = True
 cube.hide_viewport = True
 ```
 
+![hide_viewport в деле](https://github.com/gleb-papchihin/git_crash/blob/master/hide.gif)
+
 
 ## The end
 
